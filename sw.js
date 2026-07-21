@@ -1,4 +1,4 @@
-const CACHE_NAME = 'culture-v1';
+const CACHE_NAME = 'culture-v2';
 const APP_SHELL = [
   './',
   './index.html',

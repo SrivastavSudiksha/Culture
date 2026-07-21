@@ -10,6 +10,7 @@ if (typeof TT_DATA === 'undefined' || !TT_DATA || !Array.isArray(TT_DATA.entries
 }
 
 const ICONS = { L: '🧬', P: '🔬', T: '📝' };
+const TYPE_LABELS = { L: 'Lecture', P: 'Practical', T: 'Tutorial' };
 const ELECTIVE_LABELS = {
   DE2: 'Department Elective 2',
   DE3: 'Department Elective 3',
@@ -21,6 +22,30 @@ const BIOTECH_BATCHES = (TT_DATA.batches || []).filter(b => b.startsWith('C'));
 if (BIOTECH_BATCHES.length === 0 || !TT_DATA.days || TT_DATA.days.length === 0) {
   showFatalError();
   throw new Error('Culture: timetable data has no batches or days.');
+}
+
+// Parses a slot string like "9-10AM" or "12-1PM" into 24-hour decimal
+// start/end hours, so the app can tell which class is happening right now.
+function parseTimeSlot(str) {
+  const m = /^(\d+)-(\d+)(AM|PM)$/i.exec((str || '').trim());
+  if (!m) return null;
+  const [, leftStr, rightStr, rightMeridiem] = m;
+  const to24 = (hourStr, meridiem) => {
+    let h = parseInt(hourStr, 10) % 12;
+    if (meridiem.toUpperCase() === 'PM') h += 12;
+    return h;
+  };
+  const end = to24(rightStr, rightMeridiem);
+  // 11-12PM crosses from AM to noon; every other slot in a daytime
+  // timetable shares the same meridiem as its end time.
+  const leftMeridiem = (rightStr === '12' && rightMeridiem.toUpperCase() === 'PM') ? 'AM' : rightMeridiem;
+  const start = to24(leftStr, leftMeridiem);
+  return { start, end };
+}
+
+function currentSlotInfo() {
+  const now = new Date();
+  return { day: todaysTTDay(), hour: now.getHours() + now.getMinutes() / 60 };
 }
 
 const tabBtns = document.querySelectorAll('.tab-btn');
@@ -149,13 +174,21 @@ function renderSchedule() {
   schedule.style.display = 'flex';
   empty.style.display = 'none';
 
+  const live = currentSlotInfo();
+  const isViewingToday = day === live.day;
+  let nowCard = null;
+
   items.forEach((e, i) => {
+    const slot = parseTimeSlot(e.time);
+    const isNow = isViewingToday && slot && live.hour >= slot.start && live.hour < slot.end;
+
     const card = document.createElement('div');
-    card.className = `card animate type-${e.type}${e.elective ? ' elective' : ''}`;
+    card.className = `card animate type-${e.type}${e.elective ? ' elective' : ''}${isNow ? ' now' : ''}`;
     card.style.animationDelay = `${i * 0.08}s`;
 
     const isSlotPlaceholder = /^(DE|SE)\d+$/.test(e.type);
     const slotSubject = isSlotPlaceholder ? electiveSlotSubject(e.type, e.elective_choice) : null;
+    const typeLabel = isSlotPlaceholder ? (ELECTIVE_LABELS[e.type] || e.type) : (TYPE_LABELS[e.type] || e.type);
 
     const resolvedName = slotSubject
       ? slotSubject.name
@@ -169,7 +202,7 @@ function renderSchedule() {
 
     card.innerHTML = `
       <div>
-        <div class="time">${e.time} · ${e.type}${e.elective ? '<span class="elective-tag">Elective</span>' : ''}</div>
+        <div class="time">${e.time} · ${typeLabel}${e.elective ? '<span class="elective-tag">Elective</span>' : ''}${isNow ? '<span class="now-tag">NOW</span>' : ''}</div>
         <div class="subject">${resolvedName}</div>
         ${codeLine ? `<div class="subject-code">${codeLine}</div>` : ''}
         <div class="details">${detailsLine}</div>
@@ -177,7 +210,12 @@ function renderSchedule() {
       <div class="icon">${ICONS[e.type] || '📌'}</div>
     `;
     schedule.appendChild(card);
+    if (isNow) nowCard = card;
   });
+
+  if (nowCard) {
+    requestAnimationFrame(() => nowCard.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+  }
 }
 
 [daySel, batchSel, typeSel, electiveOnly].forEach(el => el.addEventListener('change', renderSchedule));
