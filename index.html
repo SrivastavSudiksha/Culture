@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Culture — Biotech Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-row">
+      <div class="petri" aria-hidden="true">🧫</div>
+      <div>
+        <p class="eyebrow">JIIT · V SEMESTER · DEPT. OF BIOTECHNOLOGY</p>
+        <h1>Culture<span class="dot">.</span></h1>
+      </div>
+    </div>
+    <div class="dna-rail" aria-hidden="true"></div>
+    <p class="sub">C1 · C2 · C3 schedule, electives &amp; free slots</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="schedule">Schedule</button>
+    <button class="tab-btn" data-tab="free">Free Slots</button>
+  </div>
+
+  <div class="tab-panel" id="panel-schedule">
+    <div class="filters">
+      <select class="arrow" id="day"></select>
+      <select class="arrow" id="batch"></select>
+    </div>
+    <div class="filters">
+      <select class="arrow" id="type">
+        <option value="">All types</option>
+        <option value="L">Lecture</option>
+        <option value="P">Practical</option>
+        <option value="T">Tutorial</option>
+      </select>
+      <label class="check-row">
+        <input type="checkbox" id="electiveOnly">
+        Electives only
+      </label>
+    </div>
+
+    <div class="elective-info" id="electiveInfo"></div>
+    <div class="schedule" id="schedule"></div>
+    <div class="empty" id="empty">
+      <div class="empty-icon">🧫</div>
+      <h3>Nothing cultured here</h3>
+      <p>Try a different day or batch</p>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="panel-free" style="display:none;">
+    <div class="filters">
+      <select class="arrow" id="freeDay"></select>
+    </div>
+    <div class="free-table-wrap">
+      <table class="free-table" id="freeTable"></table>
+    </div>
+  </div>
+</div>
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
