@@ -21,6 +21,16 @@
   --amber-soft: rgba(240, 176, 80, 0.10);
   --amber-line: rgba(240, 176, 80, 0.35);
 
+  --blue: #4ea1f0;
+  --blue-soft: rgba(78, 161, 240, 0.10);
+  --blue-line: rgba(78, 161, 240, 0.35);
+  --blue-glow: rgba(78, 161, 240, 0.18);
+
+  --violet: #b083f0;
+  --violet-soft: rgba(176, 131, 240, 0.10);
+  --violet-line: rgba(176, 131, 240, 0.35);
+  --violet-glow: rgba(176, 131, 240, 0.18);
+
   --danger: #e07060;
   --danger-soft: rgba(224, 112, 96, 0.12);
 
@@ -319,6 +329,39 @@ select option {
   background: var(--surface-2);
 }
 .card:hover::before { opacity: 1; }
+
+/* Practical: blue accent */
+.card.type-P { border-left-color: var(--blue); }
+.card.type-P:hover { border-left-color: var(--blue); }
+.card.type-P::before {
+  background: linear-gradient(135deg, rgba(78,161,240,0.03) 0%, transparent 60%);
+}
+.card.type-P .time { color: var(--blue); }
+.card.type-P .icon {
+  background: var(--blue-soft);
+  border-color: var(--blue-line);
+}
+.card.type-P:hover .icon {
+  background: var(--blue-glow);
+  border-color: var(--blue);
+}
+
+/* Tutorial: violet accent */
+.card.type-T { border-left-color: var(--violet); }
+.card.type-T:hover { border-left-color: var(--violet); }
+.card.type-T::before {
+  background: linear-gradient(135deg, rgba(176,131,240,0.03) 0%, transparent 60%);
+}
+.card.type-T .time { color: var(--violet); }
+.card.type-T .icon {
+  background: var(--violet-soft);
+  border-color: var(--violet-line);
+}
+.card.type-T:hover .icon {
+  background: var(--violet-glow);
+  border-color: var(--violet);
+}
+
 .card.elective { border-left-color: var(--amber); }
 .card.elective:hover { border-left-color: var(--amber); }
 .card.elective::before {
@@ -480,6 +523,21 @@ select option {
   border: 1px solid rgba(224,112,96,0.25);
 }
 .free-cell:hover { transform: scale(1.05); }
+
+/* ─── Fatal error state ─── */
+.fatal-error {
+  display: none;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-faint);
+}
+.fatal-error h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.fatal-error p { font-size: 0.88rem; }
 
 /* ─── Responsive ─── */
 @media (max-width: 360px) {

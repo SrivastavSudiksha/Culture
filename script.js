@@ -1,3 +1,14 @@
+function showFatalError() {
+  document.querySelectorAll('.tabs, .tab-panel').forEach(el => el.style.display = 'none');
+  const fatal = document.getElementById('fatalError');
+  if (fatal) fatal.style.display = 'block';
+}
+
+if (typeof TT_DATA === 'undefined' || !TT_DATA || !Array.isArray(TT_DATA.entries)) {
+  showFatalError();
+  throw new Error('Culture: TT_DATA is missing or malformed — check that data.js loaded correctly.');
+}
+
 const ICONS = { L: '🧬', P: '🔬', T: '📝' };
 const ELECTIVE_LABELS = {
   DE2: 'Department Elective 2',
@@ -5,7 +16,12 @@ const ELECTIVE_LABELS = {
   SE1: 'Open Elective 1',
   minor: 'Minor courses'
 };
-const BIOTECH_BATCHES = TT_DATA.batches.filter(b => b.startsWith('C'));
+const BIOTECH_BATCHES = (TT_DATA.batches || []).filter(b => b.startsWith('C'));
+
+if (BIOTECH_BATCHES.length === 0 || !TT_DATA.days || TT_DATA.days.length === 0) {
+  showFatalError();
+  throw new Error('Culture: timetable data has no batches or days.');
+}
 
 const tabBtns = document.querySelectorAll('.tab-btn');
 const panels = { schedule: document.getElementById('panel-schedule'), free: document.getElementById('panel-free') };
@@ -135,7 +151,7 @@ function renderSchedule() {
 
   items.forEach((e, i) => {
     const card = document.createElement('div');
-    card.className = `card animate${e.elective ? ' elective' : ''}`;
+    card.className = `card animate type-${e.type}${e.elective ? ' elective' : ''}`;
     card.style.animationDelay = `${i * 0.08}s`;
 
     const isSlotPlaceholder = /^(DE|SE)\d+$/.test(e.type);

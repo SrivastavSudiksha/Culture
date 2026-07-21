@@ -2,8 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Culture — Biotech Planner</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Culture — Biotech Timetable Planner</title>
+<meta name="description" content="Culture is a fast, offline-friendly timetable planner for JIIT Biotechnology students — schedule, electives, and free-slot lookup by day and batch.">
+<meta name="theme-color" content="#0a0f0d">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:title" content="Culture — Biotech Timetable Planner">
+<meta property="og:description" content="Schedule, electives &amp; free slots for JIIT Biotechnology, at a glance.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.svg">
+<link rel="manifest" href="manifest.json">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -30,11 +43,11 @@
 
   <div class="tab-panel" id="panel-schedule">
     <div class="filters">
-      <select class="arrow" id="day"></select>
-      <select class="arrow" id="batch"></select>
+      <select class="arrow" id="day" aria-label="Day"></select>
+      <select class="arrow" id="batch" aria-label="Batch"></select>
     </div>
     <div class="filters">
-      <select class="arrow" id="type">
+      <select class="arrow" id="type" aria-label="Class type">
         <option value="">All types</option>
         <option value="L">Lecture</option>
         <option value="P">Practical</option>
@@ -57,14 +70,34 @@
 
   <div class="tab-panel" id="panel-free" style="display:none;">
     <div class="filters">
-      <select class="arrow" id="freeDay"></select>
+      <select class="arrow" id="freeDay" aria-label="Day"></select>
     </div>
     <div class="free-table-wrap">
       <table class="free-table" id="freeTable"></table>
     </div>
   </div>
+
+  <div class="fatal-error" id="fatalError" style="display:none;">
+    <div class="empty-icon">⚠️</div>
+    <h3>Couldn't load the timetable</h3>
+    <p>Try refreshing the page. If this keeps happening, the data file may be missing or corrupted.</p>
+  </div>
 </div>
-<script src="data.js"></script>
-<script src="script.js"></script>
+
+<noscript>
+  <p style="text-align:center;color:#8da396;padding:40px 16px;">
+    Culture needs JavaScript enabled to show your timetable.
+  </p>
+</noscript>
+
+<script src="data.js" defer></script>
+<script src="script.js" defer></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
+</script>
 </body>
 </html>

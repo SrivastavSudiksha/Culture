@@ -1,0 +1,12 @@
+{
+  "name": "culture",
+  "version": "1.0.0",
+  "description": "Timetable planner for JIIT Biotechnology students",
+  "private": true,
+  "scripts": {
+    "start": "npx serve . -l 5000",
+    "build-data": "python3 build_data.py",
+    "watch-data": "python3 build_data.py --watch"
+  },
+  "license": "MIT"
+}
