@@ -1,62 +1,157 @@
-# Culture
+# Culture Biotechnology Planner
 
-A fast, installable timetable planner for JIIT Biotechnology students — schedule, electives, and free-slot lookup by day and batch. Pure static site (HTML/CSS/JS), no framework, no backend.
+A fast, installable **Progressive Web App (PWA)** built for **Jaypee Institute of Information Technology (JIIT)** Biotechnology students to simplify timetable management. The application provides batch-wise schedules, elective planning, and free-slot discovery through a lightweight, framework-free interface.
 
-## Project structure
+## ✨ Features
 
+- 📅 Interactive timetable viewer
+- 👥 Batch-wise schedule support
+- 📚 Elective timetable integration
+- 🔍 Free-slot lookup by day and batch
+- 📱 Responsive design for desktop and mobile
+- 🌐 Works offline after first visit
+- 📦 Installable as a Progressive Web App (PWA)
+- ⚡ Fast loading with zero backend
+- 🛡️ Graceful handling of missing or invalid timetable data
+
+---
+
+## 🛠️ Tech Stack
+
+- HTML5
+- CSS3
+- Vanilla JavaScript
+- Python
+- OpenPyXL
+- Progressive Web App (Service Worker + Web App Manifest)
+
+---
+
+## 📂 Project Structure
+
+```text
+.
+├── index.html          # Application entry point
+├── style.css           # UI styling
+├── script.js           # Rendering logic
+├── data.js             # Generated timetable data
+├── build_data.py       # Generates data.js from Excel files
+├── timetable.xlsx      # Timetable source
+├── faculty.xlsx        # Faculty mapping
+├── manifest.json       # PWA manifest
+├── sw.js               # Service Worker
+├── favicon.svg
+├── icon-192.svg
+└── LICENSE
 ```
-index.html      Markup
-style.css       Styling (dark theme, CSS variables)
-script.js       Rendering logic, reads TT_DATA from data.js
-data.js         Generated timetable data (do not hand-edit — see below)
-build_data.py   Parses timetable.xlsx + faculty.xlsx into data.js
-timetable.xlsx  Source timetable spreadsheet
-faculty.xlsx    Source faculty-code lookup spreadsheet
-manifest.json   PWA manifest (installable, home-screen icon)
-sw.js           Service worker (offline caching of the app shell)
-favicon.svg, icon-192.svg   Icons
-```
 
-## Regenerating the data
+---
 
-`data.js` is generated, not hand-written. Whenever `timetable.xlsx` or `faculty.xlsx` changes:
+## 🚀 Getting Started
+
+### Clone the repository
 
 ```bash
-python3 build_data.py           # one-off build
-python3 build_data.py --watch   # rebuild automatically on file changes
+git clone https://github.com/your-username/culture-biotechnology-planner.git
+cd culture-biotechnology-planner
 ```
 
-Requires `openpyxl`:
+### Install dependency
 
 ```bash
 pip install openpyxl
 ```
 
-## Running locally
-
-No build step is needed for the site itself — it's static HTML/CSS/JS.
+### Generate timetable data
 
 ```bash
-npm install -g serve   # or: npx serve .
-npm start              # serves on http://localhost:5000
+python3 build_data.py
 ```
 
-Any static file server works (`python3 -m http.server`, VS Code's Live Server, etc.).
+Watch for changes automatically:
 
-## Deploying
+```bash
+python3 build_data.py --watch
+```
 
-Since this is a static site, it can be deployed as-is to any static host:
+---
 
-- **Vercel / Netlify / GitHub Pages / Cloudflare Pages**: point the host at the project root — no build command needed.
-- Make sure `data.js` is committed/deployed alongside the other files (it's the app's only data source).
-- Because of the service worker, deploying a data update requires bumping `CACHE_NAME` in `sw.js` so returning visitors pick up the new build promptly (the data file itself is fetched network-first, but the app shell is cache-first).
+## 💻 Run Locally
 
-## Notes
+Using Python:
 
-- The app fails gracefully (shows a "couldn't load the timetable" message) if `data.js` is missing, empty, or malformed, instead of showing a blank screen.
-- Works offline after first load via the service worker; the timetable data refreshes automatically when a connection is available.
-- Tested primarily for the current Biotech (C-batch) timetable; `build_data.py`'s manual elective/legend tables (`MANUAL_ELECTIVES`, `SHORT_CODE_NAMES`) will need updating each semester when subject codes or elective options change.
+```bash
+python3 -m http.server
+```
 
-## License
+Or using Node:
 
-MIT — see [LICENSE](LICENSE).
+```bash
+npm install -g serve
+serve .
+```
+
+You can also use **VS Code Live Server**.
+
+---
+
+## 🚢 Deployment
+
+This project is a static website and can be deployed directly to:
+
+- GitHub Pages
+- Vercel
+- Netlify
+- Cloudflare Pages
+
+No build step is required.
+
+> **Note:** Whenever timetable data is updated, regenerate `data.js` and increment `CACHE_NAME` in `sw.js` so users receive the latest cached version.
+
+---
+
+## 🏗️ Architecture
+
+```
+Excel Files
+     │
+     ▼
+build_data.py
+     │
+     ▼
+data.js
+     │
+     ▼
+Vanilla JavaScript
+     │
+     ▼
+Progressive Web App
+```
+
+---
+
+## ⚡ Performance
+
+- No frontend framework
+- No backend server
+- Lightweight static application
+- Offline-first experience
+- Minimal JavaScript footprint
+- Fast startup and navigation
+
+---
+
+## 🔄 Updating Timetable Data
+
+When a new semester begins:
+
+1. Replace `timetable.xlsx`
+2. Update `faculty.xlsx` if required
+3. Modify `MANUAL_ELECTIVES` and `SHORT_CODE_NAMES` in `build_data.py` if subject mappings change
+4. Regenerate `data.js`
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
