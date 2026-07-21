@@ -90,17 +90,6 @@ BIOTECH_BATCHES.forEach(b => {
   batchGroup.appendChild(o);
 });
 batchSel.appendChild(batchGroup);
-
-if (TT_DATA.electives && TT_DATA.electives.length) {
-  const elGroup = document.createElement('optgroup');
-  elGroup.label = 'Electives & Minor';
-  TT_DATA.electives.forEach(key => {
-    const o = document.createElement('option');
-    o.value = key; o.textContent = ELECTIVE_LABELS[key] || key;
-    elGroup.appendChild(o);
-  });
-  batchSel.appendChild(elGroup);
-}
 batchSel.value = BIOTECH_BATCHES[0];
 
 function subjectName(code, type) {
